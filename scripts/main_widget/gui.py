@@ -24,12 +24,11 @@ SOFTWARE.
 import tkinter as tk
 
 root = tk.Tk()
+mainframe = tk.Frame(master=root)
 root.wm_attributes('-type', 'splash')
 root.attributes('-topmost', True)
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-root.geometry(f'+{screen_width}+{screen_height}')
-countries_list_box = tk.Listbox(master=root, height=25)
+root.geometry('175x50+0+0')
+countries_list_box = tk.Listbox(master=mainframe, height=25)
 
 
 def set_on_country_select(command):
@@ -45,7 +44,7 @@ def set_on_country_select(command):
     countries_list_box.bind('<<ListboxSelect>>', onselect)
 
 
-time_zone_listbox = tk.Listbox(master=root, height=15)
+time_zone_listbox = tk.Listbox(master=mainframe, height=25)
 
 
 def set_on_timezone_select(command):
@@ -61,14 +60,27 @@ def set_on_timezone_select(command):
     time_zone_listbox.bind('<<ListboxSelect>>', onselect)
 
 
-time_viewer = tk.Label(text='', font=("Arial", 25))
+time_viewer = tk.Label(master=mainframe, text='', font=("Arial", 25))
 
 
 def set_time(time: str):
     time_viewer['text'] = time
 
 
-countries_list_box.pack(side=tk.LEFT, anchor=tk.NW)
-time_zone_listbox.pack(side=tk.LEFT, anchor=tk.NE)
-time_viewer.pack(side=tk.RIGHT, anchor=tk.SE)
+countries_list_box.grid(row=1, column=0)
+time_zone_listbox.grid(row=1, column=1)
+time_viewer.grid(row=0, column=0)
+
+
+def on_enter(event):
+    root.geometry('350x450+0+0')
+
+
+def on_leave(event):
+    root.geometry('175x50+0+0')
+
+
+mainframe.bind('<Enter>', on_enter)
+mainframe.bind('<Leave>', on_leave)
+mainframe.pack(fill=tk.BOTH)
 mainloop = root.mainloop

@@ -28,7 +28,7 @@ from time import sleep
 from threading import Thread
 
 from .countries import countries, Country
-from .gui import countries_list_box, time_zone_listbox, set_on_country_select, set_on_timezone_select, mainloop
+from .gui import countries_list_box, time_zone_listbox, set_on_country_select, set_on_timezone_select, mainloop, set_time
 
 timezone = None
 
@@ -48,9 +48,11 @@ def refresh_time():
         if timezone:
             timezone_ = pytz.timezone(timezone)
             now = datetime.now(timezone_)
-            time = f'{now.hour}:{now.minute}:{now.second}'
-            gui.set_time(time)
-            sleep(1)
+        else:
+            now = datetime.now()
+        time = f'{now.hour}:{now.minute}:{now.second}'
+        set_time(time)
+        sleep(1)
 
 
 def set_current_timezone(timezone_):
