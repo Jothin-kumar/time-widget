@@ -27,20 +27,20 @@ from tkinter import END
 from time import sleep
 from threading import Thread
 
-from countries import countries, Country
-import gui
+from .countries import countries, Country
+from .gui import countries_list_box, time_zone_listbox, set_on_country_select, set_on_timezone_select, mainloop
 
 timezone = None
 
 
 for country in countries:
-    gui.countries_list_box.insert(END, f'{country.full_name} - {country.iso3166_code}')
+    countries_list_box.insert(END, f'{country.full_name} - {country.iso3166_code}')
 
 
 def set_timezones(iso3166_code):
-    gui.time_zone_listbox.delete(0, END)
+    time_zone_listbox.delete(0, END)
     for timezone_ in Country(iso3166_code).timezones:
-        gui.time_zone_listbox.insert(END, timezone_)
+        time_zone_listbox.insert(END, timezone_)
 
 
 def refresh_time():
@@ -58,7 +58,8 @@ def set_current_timezone(timezone_):
     timezone = timezone_
 
 
-gui.set_on_country_select(set_timezones)
-gui.set_on_timezone_select(set_current_timezone)
-Thread(target=refresh_time).start()
-gui.mainloop()
+def main():
+    set_on_country_select(set_timezones)
+    set_on_timezone_select(set_current_timezone)
+    Thread(target=refresh_time).start()
+    mainloop()
