@@ -24,13 +24,13 @@ SOFTWARE.
 import pytz
 from datetime import datetime
 from tkinter import END
+from time import sleep
+from threading import Thread
 
 from countries import countries, Country
 import gui
 
-
-def get_time(timezone):
-    return datetime.now(pytz.timezone(timezone))
+timezone = None
 
 
 for country in countries:
@@ -39,17 +39,26 @@ for country in countries:
 
 def set_timezones(iso3166_code):
     gui.time_zone_listbox.delete(0, END)
-    for timezone in Country(iso3166_code).timezones:
-        gui.time_zone_listbox.insert(END, timezone)
+    for timezone_ in Country(iso3166_code).timezones:
+        gui.time_zone_listbox.insert(END, timezone_)
 
 
-def show_time(timezone):
-    timezone_ = pytz.timezone(timezone)
-    now = datetime.now(timezone_)
-    time = f'{now.hour}:{now.minute}:{now.second}'
-    gui.set_time(time)
+def refresh_time():
+    while True:
+        if timezone:
+            timezone_ = pytz.timezone(timezone)
+            now = datetime.now(timezone_)
+            time = f'{now.hour}:{now.minute}:{now.second}'
+            gui.set_time(time)
+            sleep(1)
+
+
+def set_current_timezone(timezone_):
+    global timezone
+    timezone = timezone_
 
 
 gui.set_on_country_select(set_timezones)
-gui.set_on_timezone_select(show_time)
+gui.set_on_timezone_select(set_current_timezone)
+Thread(target=refresh_time).start()
 gui.mainloop()
