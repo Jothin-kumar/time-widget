@@ -73,7 +73,7 @@ time_viewer.grid(row=0, column=0)
 
 
 def on_enter(event):
-    root.geometry('350x450+0+0')
+    root.geometry('350x500+0+0')
 
 
 def on_leave(event):
