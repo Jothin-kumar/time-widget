@@ -4,6 +4,7 @@ A GUI widget to show current time in different timezones (under development). To
  - A list of timezones for the selected country will be displayed on the right.
  - Select the required time zone.
  - Done!
+**Hover to expand!**
 ## Preview
 ![Screenshot](https://github.com/Jothin-kumar/time-widget/blob/main/screenshots/1.png?raw=true)
 ![Screenshot](https://github.com/Jothin-kumar/time-widget/blob/main/screenshots/2.png?raw=true)
