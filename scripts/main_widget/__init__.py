@@ -52,7 +52,7 @@ def refresh_time():
             now = datetime.now()
         time = f'{now.hour}:{now.minute}:{now.second}'
         set_time(time)
-        sleep(1)
+        sleep(0.1)
 
 
 def set_current_timezone(timezone_):
