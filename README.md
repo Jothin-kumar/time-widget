@@ -15,3 +15,7 @@ A GUI widget to show current time in different timezones (under development). To
 ![Screenshot](https://github.com/Jothin-kumar/time-widget/blob/main/screenshots/5.png?raw=true)
 Please leave a star and consider contributing :-)
 Thank you!
+
+My other interesting projects:
+ - https://github.com/Jothin-kumar/Geometry-app/
+ - https://github.com/Jothin-kumar/lines-of-code/
