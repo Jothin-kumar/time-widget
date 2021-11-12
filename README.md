@@ -1,6 +1,7 @@
 # [Time-widget](https://jothin-kumar.github.io/time-widget/) - [B. Jothin kumar](https://jothin-kumar.github.io/)
 ![Visitor count](https://visitor-badge.glitch.me/badge?page_id=Jothin-kumar.time-widget)  
-A GUI widget to show current time in different timezones (under development). To use this widget:
+A GUI widget to show current time in different timezones (under development).
+To use this widget:
  - Run scripts/startup.py
  - Select a country.
  - A list of timezones for the selected country will be displayed on the right.
