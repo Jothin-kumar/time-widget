@@ -25,7 +25,7 @@ import tkinter as tk
 
 root = tk.Tk()
 mainframe = tk.Frame(master=root)
-root.wm_attributes('-type', 'splash')
+root.overrideredirect(True)
 root.attributes('-topmost', True)
 root.geometry('175x50+0+0')
 countries_list_box = tk.Listbox(master=mainframe, height=25)
