@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Author: Jothin kumar (https://jothin-kumar.github.io/)
+Github repository of this project: https://github.com/Jothin-kumar/time-widget
 """
 import pytz
 from datetime import datetime
