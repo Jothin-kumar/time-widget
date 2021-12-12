@@ -26,11 +26,30 @@ Github repository of this project: https://github.com/Jothin-kumar/time-widget
 """
 import tkinter as tk
 
+
+left_top = 'left-top'
+right_bottom = 'right-bottom'
+
+
+def get_location_on_screen():
+    with open('location_on_screen.txt') as loc:
+        return loc.read().strip('\n')
+
+
+def set_location_on_scren(location):
+    with open('location_on_screen.txt', 'w') as loc:
+        loc.write(location)
+
+
 root = tk.Tk()
 mainframe = tk.Frame(master=root)
 root.overrideredirect(True)
 root.attributes('-topmost', True)
-root.geometry('175x50+0+0')
+location_on_screen = get_location_on_screen()
+if location_on_screen == left_top:
+    root.geometry('175x50+0+0')
+elif location_on_screen == right_bottom:
+    root.geometry('175x50+' + str(root.winfo_screenwidth()-175) + '+' + str(root.winfo_screenheight()-50))
 countries_list_box = tk.Listbox(master=mainframe, height=25)
 
 
@@ -76,11 +95,20 @@ time_viewer.grid(row=0, column=0)
 
 
 def on_enter(event):
-    root.geometry('350x500+0+0')
+    location_on_screen = get_location_on_screen()
+    print(location_on_screen)
+    if location_on_screen == left_top:
+        root.geometry('350x500+0+0')
+    elif location_on_screen == right_bottom:
+        root.geometry(f'350x500+' + str(root.winfo_screenwidth()-350) + '+' + str(root.winfo_screenheight()-500))
 
 
 def on_leave(event):
-    root.geometry('175x50+0+0')
+    location_on_screen = get_location_on_screen()
+    if location_on_screen == left_top:
+        root.geometry('175x50+0+0')
+    elif location_on_screen == right_bottom:
+        root.geometry('175x50+' + str(root.winfo_screenwidth()-175) + '+' + str(root.winfo_screenheight()-50))
 
 
 mainframe.bind('<Enter>', on_enter)
