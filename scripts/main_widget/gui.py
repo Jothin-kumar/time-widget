@@ -42,14 +42,14 @@ def set_location_on_scren(location):
 
 
 root = tk.Tk()
-mainframe = tk.Frame(master=root)
+mainframe = tk.Canvas(master=root)
 root.overrideredirect(True)
 root.attributes('-topmost', True)
 location_on_screen = get_location_on_screen()
 if location_on_screen == left_top:
-    root.geometry('175x50+0+0')
+    root.geometry('200x50+0+0')
 elif location_on_screen == right_bottom:
-    root.geometry('175x50+' + str(root.winfo_screenwidth()-175) + '+' + str(root.winfo_screenheight()-50))
+    root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
 countries_list_box = tk.Listbox(master=mainframe, height=25)
 
 
@@ -83,32 +83,55 @@ def set_on_timezone_select(command):
 
 
 time_viewer = tk.Label(master=mainframe, text='', font=("Arial", 25))
+change_loc_button = tk.Button(master=mainframe)
 
 
 def set_time(time: str):
     time_viewer['text'] = time
 
 
+def set_loc_left_top():
+    set_location_on_scren(left_top)
+    root.geometry('200x50+0+0')
+    change_loc_button['text'] = 'Switch to right bottom'
+    change_loc_button['command'] = set_loc_right_bottom
+    change_loc_button.grid_forget()
+    change_loc_button.grid(row=0, column=1)
+
+
+def set_loc_right_bottom():
+    set_location_on_scren(right_bottom)
+    root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
+    change_loc_button['text'] = 'Switch to left top'
+    change_loc_button['command'] = set_loc_left_top
+    change_loc_button.grid_forget()
+    change_loc_button.grid(row=0, column=1)
+
+
+if location_on_screen == left_top:
+    set_loc_left_top()
+elif location_on_screen == right_bottom:
+    set_loc_right_bottom()
 countries_list_box.grid(row=1, column=0)
 time_zone_listbox.grid(row=1, column=1)
 time_viewer.grid(row=0, column=0)
+change_loc_button.grid(row=0, column=1)
 
 
 def on_enter(event):
     location_on_screen = get_location_on_screen()
-    print(location_on_screen)
     if location_on_screen == left_top:
         root.geometry('350x500+0+0')
     elif location_on_screen == right_bottom:
-        root.geometry(f'350x500+' + str(root.winfo_screenwidth()-350) + '+' + str(root.winfo_screenheight()-500))
+        root.geometry(f'350x500+' + str(root.winfo_screenwidth() - 350) + '+' + str(root.winfo_screenheight() - 500))
 
 
 def on_leave(event):
     location_on_screen = get_location_on_screen()
     if location_on_screen == left_top:
-        root.geometry('175x50+0+0')
+        root.geometry('200x50+0+0')
     elif location_on_screen == right_bottom:
-        root.geometry('175x50+' + str(root.winfo_screenwidth()-175) + '+' + str(root.winfo_screenheight()-50))
+        root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
 
 
 mainframe.bind('<Enter>', on_enter)
