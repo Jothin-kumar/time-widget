@@ -26,45 +26,102 @@ Github repository of this project: https://github.com/Jothin-kumar/time-widget
 """
 import pytz
 from datetime import datetime
-from tkinter import END
 from time import sleep
 from threading import Thread
+from _tkinter import TclError
 
-from .countries import countries, Country
-from .gui import countries_list_box, time_zone_listbox, set_on_country_select, set_on_timezone_select, mainloop, set_time
+from .countries import countries, Country, get_country_by_iso3166_code
+from .gui import MinWidget as MinWidget_, MaxWidget as MaxWidget_
 
 timezone = None
 
 
-for country in countries:
-    countries_list_box.insert(END, f'{country.full_name} - {country.iso3166_code}')
+class MinWidget:
+    def __init__(self):
+        self.widget = MinWidget_()
+        self.widget.set_timezone('local time')
+        Thread(target=self.refresh_time).start()
+        self.configure_switch_to_max = self.widget.configure_switch_to_max
+        self.destroy = self.widget.destroy
+        self.mainloop = self.widget.mainloop
+
+    def refresh_time(self):
+        global timezone
+        try:
+            while True:
+                if timezone:
+                    timezone_ = pytz.timezone(timezone)
+                    now = datetime.now(timezone_)
+                    self.widget.set_timezone('local time')
+                else:
+                    now = datetime.now()
+                    self.widget.set_timezone(timezone)
+                time = f'{now.hour}:{now.minute}:{now.second}'
+                self.widget.set_time(time)
+                sleep(0.1)
+        except TclError:
+            pass
 
 
-def set_timezones(iso3166_code):
-    time_zone_listbox.delete(0, END)
-    for timezone_ in Country(iso3166_code).timezones:
-        time_zone_listbox.insert(END, timezone_)
+class MaxWidget:
+    def __init__(self):
+        self.widget = MaxWidget_()
+        self.widget.set_countries(countries)
+
+        def on_country_selected(country):
+            self.widget.set_timezones(get_country_by_iso3166_code(country).timezones)
+
+        self.widget.set_on_country_select(on_country_selected)
+        self.widget.set_on_timezone_select(self.set_timezone)
+        Thread(target=self.refresh_time).start()
+        self.configure_switch_to_min = self.widget.configure_switch_to_min
+        self.destroy = self.widget.destroy
+        self.mainloop = self.widget.mainloop
+
+    def set_timezone(self, timezone_):
+        global timezone
+        timezone = timezone_
+
+    def refresh_time(self):
+        global timezone
+        try:
+            while True:
+                if timezone:
+                    timezone_ = pytz.timezone(timezone)
+                    now = datetime.now(timezone_)
+                else:
+                    now = datetime.now()
+                time = f'{now.hour}:{now.minute}:{now.second}'
+                self.widget.set_time(time)
+                sleep(0.1)
+        except TclError:
+            pass
 
 
-def refresh_time():
-    while True:
-        if timezone:
-            timezone_ = pytz.timezone(timezone)
-            now = datetime.now(timezone_)
-        else:
-            now = datetime.now()
-        time = f'{now.hour}:{now.minute}:{now.second}'
-        set_time(time)
-        sleep(0.1)
-
-
-def set_current_timezone(timezone_):
-    global timezone
-    timezone = timezone_
+widget = MinWidget
 
 
 def main():
-    set_on_country_select(set_timezones)
-    set_on_timezone_select(set_current_timezone)
-    Thread(target=refresh_time).start()
-    mainloop()
+    global widget
+
+    def switch_to_max_widget(evt):
+        global widget
+        try:
+            widget.destroy()
+        except AttributeError:
+            pass
+        widget = MaxWidget()
+        widget.configure_switch_to_min(switch_to_min_widget)
+        widget.mainloop()
+
+    def switch_to_min_widget(evt):
+        global widget
+        try:
+            widget.destroy()
+        except AttributeError:
+            pass
+        widget = MinWidget()
+        widget.configure_switch_to_max(switch_to_max_widget)
+        widget.mainloop()
+
+    switch_to_min_widget(None)

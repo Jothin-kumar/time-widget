@@ -283,3 +283,10 @@ countries = [
     Country(iso3166_code='ZM'),
     Country(iso3166_code='ZW')
 ]
+
+
+def get_country_by_iso3166_code(iso3166_code):
+    for country in countries:
+        if country.iso3166_code == iso3166_code:
+            return country
+    return None

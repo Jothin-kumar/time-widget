@@ -26,7 +26,6 @@ Github repository of this project: https://github.com/Jothin-kumar/time-widget
 """
 import tkinter as tk
 
-
 left_top = 'left-top'
 right_bottom = 'right-bottom'
 
@@ -41,100 +40,128 @@ def set_location_on_scren(location):
         loc.write(location)
 
 
-root = tk.Tk()
-mainframe = tk.Canvas(master=root)
-root.overrideredirect(True)
-root.attributes('-topmost', True)
-location_on_screen = get_location_on_screen()
-if location_on_screen == left_top:
-    root.geometry('200x50+0+0')
-elif location_on_screen == right_bottom:
-    root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
-countries_list_box = tk.Listbox(master=mainframe, height=25)
+class MinWidget:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.overrideredirect(True)
+        self.root.attributes('-topmost', True)
+        self.root.resizable(False, False)
+        self.time_viewer = tk.Label(master=self.root, text='', font=("Arial", 25))
+        self.timezone_viewer = tk.Label(master=self.root, text='', font=("Arial", 15))
+        self.time_viewer.pack()
+        self.timezone_viewer.pack()
+        self.mainloop = self.root.mainloop
+        self.destroy = self.root.destroy
+        self.refresh_size_and_location()
+
+    def refresh_size_and_location(self):
+        location_on_screen = get_location_on_screen()
+        self.root.update()
+        if location_on_screen == left_top:
+            self.root.geometry('+0+0')
+        elif location_on_screen == right_bottom:
+            w = int(self.root.winfo_geometry().split('+')[0].split('x')[0])
+            h = int(self.root.winfo_geometry().split('+')[0].split('x')[1])
+            self.root.geometry(
+                '+' + str(self.root.winfo_screenwidth() - w) + '+' + str(self.root.winfo_screenheight() - h)
+            )
+
+    def set_time(self, time: str):
+        self.time_viewer['text'] = time
+        self.refresh_size_and_location()
+
+    def set_timezone(self, timezone: str):
+        self.timezone_viewer['text'] = timezone
+        self.refresh_size_and_location()
+
+    def configure_switch_to_max(self, command):
+        self.root.bind('<Button-3>', command)
 
 
-def set_on_country_select(command):
-    def onselect(evt):
-        try:
-            w = evt.widget
-            index = int(w.curselection()[0])
-            value = w.get(index)
-            command(value[-2:])
-        except:
-            pass
+class MaxWidget:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.overrideredirect(True)
+        self.root.attributes('-topmost', True)
+        self.root.resizable(False, False)
+        self.time_viewer = tk.Label(master=self.root, text='', font=("Arial", 25))
+        self.change_loc_button = tk.Button(master=self.root)
+        self.mainloop = self.root.mainloop
+        self.destroy = self.root.destroy
+        self.countries_list_box = tk.Listbox(master=self.root, height=25)
+        self.time_zone_listbox = tk.Listbox(master=self.root, height=25)
+        self.countries_list_box.grid(row=1, column=0)
+        self.time_zone_listbox.grid(row=1, column=1)
+        self.time_viewer.grid(row=0, column=0)
+        self.change_loc_button.grid(row=0, column=1)
+        self.refresh_size_and_location()
 
-    countries_list_box.bind('<<ListboxSelect>>', onselect)
+    def refresh_size_and_location(self):
+        location_on_screen = get_location_on_screen()
+        self.root.update()
+        if location_on_screen == left_top:
+            self.root.geometry('+0+0')
+            self.change_loc_button['text'] = 'Switch to right bottom'
 
+            def to_right_bottom():
+                set_location_on_scren(right_bottom)
 
-time_zone_listbox = tk.Listbox(master=mainframe, height=25)
+            self.change_loc_button['command'] = to_right_bottom
+        elif location_on_screen == right_bottom:
+            w = int(self.root.winfo_geometry().split('+')[0].split('x')[0])
+            h = int(self.root.winfo_geometry().split('+')[0].split('x')[1])
+            self.root.geometry(
+                '+' + str(self.root.winfo_screenwidth() - w) + '+' + str(self.root.winfo_screenheight() - h)
+            )
+            self.change_loc_button['text'] = 'Switch to left top'
 
+            def to_left_top():
+                set_location_on_scren(left_top)
 
-def set_on_timezone_select(command):
-    def onselect(evt):
-        try:
-            w = evt.widget
-            index = int(w.curselection()[0])
-            value = w.get(index)
-            command(value)
-        except:
-            pass
+            self.change_loc_button['command'] = to_left_top
 
-    time_zone_listbox.bind('<<ListboxSelect>>', onselect)
+    def set_countries(self, countries: list):
+        self.countries_list_box.delete(0, tk.END)
+        for country in countries:
+            self.countries_list_box.insert(tk.END, f'{country.full_name} - {country.iso3166_code}')
+        self.refresh_size_and_location()
 
+    def set_timezones(self, timezones: list):
+        self.time_zone_listbox.delete(0, tk.END)
+        for timezone in timezones:
+            self.time_zone_listbox.insert(tk.END, timezone)
+        self.refresh_size_and_location()
 
-time_viewer = tk.Label(master=mainframe, text='', font=("Arial", 25))
-change_loc_button = tk.Button(master=mainframe)
+    def set_on_country_select(self, command):
+        def onselect(evt):
+            try:
+                w = evt.widget
+                index = int(w.curselection()[0])
+                value = w.get(index)
+                command(value[-2:])
+            except:
+                pass
 
+        self.countries_list_box.bind('<<ListboxSelect>>', onselect)
 
-def set_time(time: str):
-    time_viewer['text'] = time
+    def set_on_timezone_select(self, command):
+        def onselect(evt):
+            try:
+                w = evt.widget
+                index = int(w.curselection()[0])
+                value = w.get(index)
+                command(value)
+            except:
+                pass
 
+        self.time_zone_listbox.bind('<<ListboxSelect>>', onselect)
 
-def set_loc_left_top():
-    set_location_on_scren(left_top)
-    root.geometry('200x50+0+0')
-    change_loc_button['text'] = 'Switch to right bottom'
-    change_loc_button['command'] = set_loc_right_bottom
-    change_loc_button.grid_forget()
-    change_loc_button.grid(row=0, column=1)
+    def set_time(self, time: str):
+        self.time_viewer['text'] = time
+        self.refresh_size_and_location()
 
+    def configure_switch_to_min(self, command):
+        self.root.bind('<Button-3>', command)
 
-def set_loc_right_bottom():
-    set_location_on_scren(right_bottom)
-    root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
-    change_loc_button['text'] = 'Switch to left top'
-    change_loc_button['command'] = set_loc_left_top
-    change_loc_button.grid_forget()
-    change_loc_button.grid(row=0, column=1)
-
-
-if location_on_screen == left_top:
-    set_loc_left_top()
-elif location_on_screen == right_bottom:
-    set_loc_right_bottom()
-countries_list_box.grid(row=1, column=0)
-time_zone_listbox.grid(row=1, column=1)
-time_viewer.grid(row=0, column=0)
-change_loc_button.grid(row=0, column=1)
-
-
-def on_enter(event):
-    location_on_screen = get_location_on_screen()
-    if location_on_screen == left_top:
-        root.geometry('350x500+0+0')
-    elif location_on_screen == right_bottom:
-        root.geometry(f'350x500+' + str(root.winfo_screenwidth() - 350) + '+' + str(root.winfo_screenheight() - 500))
-
-
-def on_leave(event):
-    location_on_screen = get_location_on_screen()
-    if location_on_screen == left_top:
-        root.geometry('200x50+0+0')
-    elif location_on_screen == right_bottom:
-        root.geometry('200x50+' + str(root.winfo_screenwidth() - 200) + '+' + str(root.winfo_screenheight() - 50))
-
-
-mainframe.bind('<Enter>', on_enter)
-mainframe.bind('<Leave>', on_leave)
-mainframe.pack(fill=tk.BOTH)
-mainloop = root.mainloop
+    def set_change_loc_button_command(self, command):
+        self.change_loc_button['command'] = command
