@@ -53,7 +53,7 @@ class MinWidget:
         self.mainloop = self.root.mainloop
         self.destroy = self.root.destroy
 
-        def on_middle_button(event):
+        def on_right_click(event):
             location_on_screen = get_location_on_screen()
             if location_on_screen == left_top:
                 set_location_on_scren(right_bottom)
@@ -61,7 +61,7 @@ class MinWidget:
                 set_location_on_scren(left_top)
             self.refresh_size_and_location()
 
-        self.time_viewer.bind('Button-3>', on_middle_button)
+        self.time_viewer.bind('Button-3>', on_right_click)
         self.refresh_size_and_location()
 
     def refresh_size_and_location(self):
@@ -103,7 +103,7 @@ class MaxWidget:
         self.time_zone_listbox.grid(row=1, column=1)
         self.time_viewer.grid(row=0, column=0)
 
-        def on_middle_button(event):
+        def on_right_click(event):
             location_on_screen = get_location_on_screen()
             if location_on_screen == left_top:
                 set_location_on_scren(right_bottom)
@@ -111,7 +111,7 @@ class MaxWidget:
                 set_location_on_scren(left_top)
             self.refresh_size_and_location()
 
-        self.root.bind('<Button-3>', on_middle_button)
+        self.root.bind('<Button-3>', on_right_click)
         self.refresh_size_and_location()
 
     def refresh_size_and_location(self):
