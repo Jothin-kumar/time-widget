@@ -1,13 +1,7 @@
 # [Time-widget](https://jothin-kumar.github.io/time-widget/) - [B. Jothin kumar](https://jothin-kumar.github.io/)
 ![Visitor count](https://visitor-badge.glitch.me/badge?page_id=Jothin-kumar.time-widget)  
-A GUI widget to show current time in different timezones (under development).  
-To use this widget:
- - Run scripts/startup.py
- - Select a country.
- - A list of timezones for the selected country will be displayed on the right.
- - Select the required time zone.
- - Done!
-**Hover to expand!**
+A GUI widget to show current time in different timezones across the world.  
+To use this widget, install the latest version of debian release from [here](https://github.com/Jothin-kumar/time-widget/releases/tag/debian). Windows release will be published soon!  
 ## Preview
 ![Screenshot](https://github.com/Jothin-kumar/time-widget/blob/main/screenshots/1.png?raw=true)
 ![Screenshot](https://github.com/Jothin-kumar/time-widget/blob/main/screenshots/2.png?raw=true)
