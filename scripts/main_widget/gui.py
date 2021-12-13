@@ -52,6 +52,16 @@ class MinWidget:
         self.timezone_viewer.pack()
         self.mainloop = self.root.mainloop
         self.destroy = self.root.destroy
+
+        def on_middle_button(event):
+            location_on_screen = get_location_on_screen()
+            if location_on_screen == left_top:
+                set_location_on_scren(right_bottom)
+            elif location_on_screen == right_bottom:
+                set_location_on_scren(left_top)
+            self.refresh_size_and_location()
+
+        self.root.bind('<Button-2>', on_middle_button)
         self.refresh_size_and_location()
 
     def refresh_size_and_location(self):
@@ -85,7 +95,6 @@ class MaxWidget:
         self.root.attributes('-topmost', True)
         self.root.resizable(False, False)
         self.time_viewer = tk.Label(master=self.root, text='', font=("Arial", 25))
-        self.change_loc_button = tk.Button(master=self.root)
         self.mainloop = self.root.mainloop
         self.destroy = self.root.destroy
         self.countries_list_box = tk.Listbox(master=self.root, height=25)
@@ -93,7 +102,16 @@ class MaxWidget:
         self.countries_list_box.grid(row=1, column=0)
         self.time_zone_listbox.grid(row=1, column=1)
         self.time_viewer.grid(row=0, column=0)
-        self.change_loc_button.grid(row=0, column=1)
+
+        def on_middle_button(event):
+            location_on_screen = get_location_on_screen()
+            if location_on_screen == left_top:
+                set_location_on_scren(right_bottom)
+            elif location_on_screen == right_bottom:
+                set_location_on_scren(left_top)
+            self.refresh_size_and_location()
+
+        self.root.bind('<Button-2>', on_middle_button)
         self.refresh_size_and_location()
 
     def refresh_size_and_location(self):
@@ -101,24 +119,19 @@ class MaxWidget:
         self.root.update()
         if location_on_screen == left_top:
             self.root.geometry('+0+0')
-            self.change_loc_button['text'] = 'Switch to right bottom'
 
             def to_right_bottom():
                 set_location_on_scren(right_bottom)
 
-            self.change_loc_button['command'] = to_right_bottom
         elif location_on_screen == right_bottom:
             w = int(self.root.winfo_geometry().split('+')[0].split('x')[0])
             h = int(self.root.winfo_geometry().split('+')[0].split('x')[1])
             self.root.geometry(
                 '+' + str(self.root.winfo_screenwidth() - w) + '+' + str(self.root.winfo_screenheight() - h)
             )
-            self.change_loc_button['text'] = 'Switch to left top'
 
             def to_left_top():
                 set_location_on_scren(left_top)
-
-            self.change_loc_button['command'] = to_left_top
 
     def set_countries(self, countries: list):
         self.countries_list_box.delete(0, tk.END)
@@ -162,6 +175,3 @@ class MaxWidget:
 
     def configure_switch_to_min(self, command):
         self.root.bind('<Button-3>', command)
-
-    def set_change_loc_button_command(self, command):
-        self.change_loc_button['command'] = command
