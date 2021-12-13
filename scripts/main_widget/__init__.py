@@ -52,10 +52,10 @@ class MinWidget:
                 if timezone:
                     timezone_ = pytz.timezone(timezone)
                     now = datetime.now(timezone_)
-                    self.widget.set_timezone('local time')
+                    self.widget.set_timezone(timezone)
                 else:
                     now = datetime.now()
-                    self.widget.set_timezone(timezone)
+                    self.widget.set_timezone('local time')
                 time = f'{now.hour}:{now.minute}:{now.second}'
                 self.widget.set_time(time)
                 sleep(0.1)
