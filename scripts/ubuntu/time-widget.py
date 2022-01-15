@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Author: Jothin kumar (https://jothin-kumar.github.io/)
+Author: Jothin kumar (https://jothin.tech)
 Github repository of this project: https://github.com/Jothin-kumar/time-widget
 """
 from main_widget import main as main_widget
